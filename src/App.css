@@ -1,0 +1,323 @@
+/* ===============================
+   Reset margin + padding + full height
+=============================== */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-y: auto;   
+  overflow-x: hidden; 
+  font-family: Arial, sans-serif;
+}
+
+/* ===============================
+   Website Name (Main Title)
+=============================== */
+.website-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #213e58, #265c3e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: pulseGlow 2.5s infinite;
+  margin: 0;
+  padding-top: 10px;
+  margin-bottom: 40px; 
+}
+
+/* Pulse animation for glowing effect */
+@keyframes pulseGlow {
+  0%   { text-shadow: 0 0 5px rgb(32, 34, 37); }
+  50%  { text-shadow: 0 0 20px rgb(27, 71, 42); }
+  100% { text-shadow: 0 0 5px rgba(33, 122, 201, 0.836); }
+}
+
+/* ===============================
+   Tagline (Secondary Heading)
+=============================== */
+.main-heading {
+  font-family: "Merriweather", serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: italic;
+  background: linear-gradient(90deg, #1a1a1a, #722058, #b8860b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  letter-spacing: 1px;
+  margin-top: -15px; 
+}
+
+/* ===============================
+   Main Elements z-index
+=============================== */
+.website-name,
+.main-heading,
+.search-container,
+.weather-box {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===============================
+   Scene Container
+=============================== */
+.scene {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: visible;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ===============================
+   Sky
+=============================== */
+.sky {
+  background: radial-gradient(
+    circle at top left, 
+    #fff8c6 0%,    
+    #87ceeb 40%,  
+    #6a8faf 100%
+  );
+  width: 100%;
+  flex: 1; 
+  position: relative;
+  padding-top: 50px;
+}
+
+/* ===============================
+   Ground
+=============================== */
+.ground {
+  background: 
+    linear-gradient(to top, #2e8b57, #3fa34d, #9ccc65),
+    repeating-linear-gradient(
+      45deg,
+      rgb(255, 255, 255) 0px,
+      rgba(255, 255, 255, 0.397) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  height: 20vh;
+  width: 100%;
+  position: relative;
+  box-shadow: 0px -4px 10px rgba(143, 224, 95, 0.712);
+}
+
+/* ===============================
+   Clouds
+=============================== */
+.cloud {
+  width: 100px;
+  height: 28px;
+  background: rgba(233, 230, 230, 0.9);
+  border-radius: 50%;
+  position: absolute;
+  filter: blur(10px);
+  opacity: 0.9;
+  z-index: 1;
+  box-shadow: 
+    40px 0px 0px rgba(240, 236, 236, 0.9),
+    20px -15px 0px rgba(231, 230, 230, 0.9),
+    70px -8px 0px rgba(224, 221, 221, 0.9);
+  animation: cloudGlide linear infinite; 
+  --startX: -200px;
+}
+
+@keyframes cloudGlide {
+  0%   { transform: translateX(var(--startX)); }
+  100% { transform: translateX(120vw); }
+}
+
+.cloud:nth-child(1) { top: 3%; width: 120px; height: 30px; animation-duration: 60s; animation-delay: -10s; }
+.cloud:nth-child(2) { top: 8%; width: 90px; height: 25px; animation-duration: 70s; animation-delay: -25s; }
+.cloud:nth-child(3) { top: 15%; width: 150px; height: 40px; animation-duration: 80s; animation-delay: -40s; }
+.cloud:nth-child(4) { top: 20%; width: 110px; height: 28px; animation-duration: 90s; animation-delay: -55s; }
+.cloud:nth-child(5) { top: 25%; width: 95px; height: 22px; animation-duration: 75s; animation-delay: -20s; }
+.cloud:nth-child(6) { top: 30%; width: 130px; height: 35px; animation-duration: 65s; animation-delay: -35s; }
+
+/* ===============================
+   Search Section
+=============================== */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 153, 153, 0.6);
+  background: rgba(112, 154, 156, 0.521);
+  width: clamp(200px, 40vw, 320px);
+  outline: none;
+  box-shadow: inset 0 2px 4px rgba(202, 214, 224, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #4CAF50, #2e8b57);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.568);
+  background: linear-gradient(135deg, #366639b0, #4c6baf, #87cebe);
+}
+
+/* ===============================
+   Results
+=============================== */
+.result-box {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.weather-box {
+  background: linear-gradient(135deg, #5f8099c7, #89af8a, #307762c0);
+  padding: 30px;
+  border-radius: 40px;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.5s ease-in-out;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: 0 auto;
+  box-shadow: 0px 1px 10px 3px rgba(52, 136, 151, 0.712); 
+  position: relative;
+}
+
+.weather-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: 
+    radial-gradient(rgb(84, 156, 156) 3px, transparent 3px),
+    radial-gradient(rgb(6, 26, 41) 3px, transparent 3px),
+    radial-gradient(rgb(36, 47, 61) 3px, transparent 3px);
+  background-size: 40px 40px;
+  animation: moveBG 8s linear infinite;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+@keyframes moveBG {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100px; }
+}
+
+.weather-box h3,
+.weather-box p {
+  position: relative;
+  z-index: 1;
+}
+
+.weather-box h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.weather-box p {
+  font-size: 14px;
+  margin: 3px 0;
+}
+
+/* ===============================
+   Time & Date Box
+=============================== */
+.time-date-box {
+  text-align: center;
+  margin: 15px auto 25px auto;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.363);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.205);
+  display: block;
+  backdrop-filter: blur(6px);
+  width: fit-content;
+}
+
+.time {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #176314;
+  margin: 0;
+}
+
+.date {
+  font-size: 1rem;
+  color: rgba(3, 3, 3, 0.85);
+  margin-top: 5px;
+}
+
+/* ===============================
+   Responsive
+=============================== */
+@media (max-width: 600px) {
+  .weather-box {
+    width: 90%;
+    max-width: 320px;
+    padding: 25px;
+  }
+
+  .search-input {
+    width: 80%;
+  }
+
+  .results {
+    justify-content: center;
+    padding-left: 0;
+  }
+}
+
+/* ===============================
+   Footer
+=============================== */
+.footer {
+  text-align: center;
+  padding: 1px;
+  background: rgba(66, 42, 19, 0.918); 
+  color: #ffffffd7;
+  font-size: 14px;
+  z-index: 2;
+}
