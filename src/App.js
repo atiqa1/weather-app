@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTemperatureHigh, faTemperatureLow, faTint, faWind, faCloud, faEye, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+
 
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
 
   const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -31,11 +33,7 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+  // Sky background for scene
   const getSkyClass = () => {
     if (!weather || weather.error) return "sky";
     const temp = weather.main.temp;
@@ -44,42 +42,52 @@ function App() {
     return "sky warm";
   };
 
+  // Weather-box background based on time & condition
+  const getBoxClass = () => {
+    if (!weather || weather.error) return "weather-box";
+
+    const hour = new Date().getUTCHours() + weather.timezone / 3600;
+    const isNight = hour < 6 || hour > 18;
+    const condition = weather.weather[0].main.toLowerCase();
+
+    if (isNight) return "weather-box night";
+    if (condition.includes("rain") || condition.includes("storm")) return "weather-box rain";
+    return "weather-box day";
+  };
+
+  const today = new Date();
+  const date = today.toLocaleDateString([], {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const formatTime = (timestamp, timezone) => {
+    return new Date((timestamp + timezone) * 1000).toUTCString().slice(-12, -4);
+  };
+
   return (
     <>
       <div className="scene">
         <div className={getSkyClass()}>
-          <div className="cloud"></div>
-          <div className="cloud"></div>
-          <div className="cloud"></div>
-          <div className="cloud"></div>
-          <div className="cloud"></div>
-          <div className="cloud"></div>
+          {/* Clouds */}
+          {[...Array(12)].map((_, i) => (
+            <div key={i} className="cloud"></div>
+          ))}
 
           <h1 className="website-name">The Weather Pulse</h1>
           <h2 className="main-heading">Know Your Forecast, Anytime, Anywhere.</h2>
 
-          <div className="time-date-box">
-            <p className="time">
-              {currentTime.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              })}
-            </p>
-            <p className="date">
-              {currentTime.toLocaleDateString([], {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
+          {/* Date */}
+          <div className="date-box">
+            <p className="date">{date}</p>
           </div>
 
           <div className="search-container">
             <input
               type="search"
-              placeholder="Discover your weather..."
+              placeholder="Search your location..."
               className="search-input"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -92,25 +100,36 @@ function App() {
 
           <div className="results">
             {weather ? (
-              <div className="weather-box">
+              <div className={getBoxClass()}>
                 {weather.error ? (
                   <p>❌ {weather.error}</p>
                 ) : (
                   <>
-                    <h3>Current Conditions in {weather.name}</h3>
+                    <h3>
+                      {weather.name}, {weather.sys.country}
+                    </h3>
                     <img
                       src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
                       alt={weather.weather[0].description}
                     />
-                    <p>🌡 Temperature: {weather.main.temp}°C</p>
-                    <p>☁ Condition: {weather.weather[0].description}</p>
-                    <p>💨 Wind: {weather.wind.speed} m/s</p>
+
+                    <div className="weather-section">
+                      <p><FontAwesomeIcon icon={faTemperatureHigh} /> Temperature: {weather.main.temp}°C</p>
+                      <p><FontAwesomeIcon icon={faTemperatureLow} /> Feels like: {weather.main.feels_like}°C</p>
+                      <p><FontAwesomeIcon icon={faTint} /> Humidity: {weather.main.humidity}%</p>
+                      <p><FontAwesomeIcon icon={faWind} /> Wind: {weather.wind.speed} m/s</p>
+                      <p><FontAwesomeIcon icon={faCloud} /> Clouds: {weather.clouds.all}%</p>
+                      <p><FontAwesomeIcon icon={faEye} /> Visibility: {weather.visibility} m</p>
+                      <p><FontAwesomeIcon icon={faSun} /> Sunrise: {formatTime(weather.sys.sunrise, weather.timezone)}</p>
+                      <p><FontAwesomeIcon icon={faMoon} /> Sunset: {formatTime(weather.sys.sunset, weather.timezone)}</p>
+
+                    </div>
                   </>
                 )}
               </div>
             ) : (
               <div className="weather-box">
-                <p>🔍 Search a city to see the forecast</p>
+                <p>🌍 Check the weather in a city or country...</p>
               </div>
             )}
           </div>
